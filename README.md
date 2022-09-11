@@ -10,7 +10,7 @@ git clone https://github.com/alvarodeleon/tzcalc
 
 sudo cp tzcalc/tzcalc /usr/sbin/tzcalc
 
-chmod + /usr/sbin/tzcalc
+sudo chmod + /usr/sbin/tzcalc
 ```
 
 ## Usage
