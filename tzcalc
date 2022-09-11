@@ -26,6 +26,7 @@ do
 done
 
 localcity=$(echo $localdate | cut -d "," -f 1)
+tmp=$localcity
 
 #Check if localcity is valid TZ or shuld find one valid
 if [ ! -f "/usr/share/zoneinfo/$localcity" ]; then
@@ -37,7 +38,7 @@ localtz=$(TZ="$localcity" date "+%z")
 querytime=${querytime//,/$'\n'} 
 
 if [ ! -f "/usr/share/zoneinfo/$localcity" ]; then
-	echo "$localcity is a invalid TZ"
+	echo "$tmp is a invalid TZ"
 	exit;
 fi
 
@@ -48,15 +49,19 @@ echo " "
 echo " "
 for str in $querytime 
 do
-
+	tmp=$str
 	if [ ! -f "/usr/share/zoneinfo/$str" ]; then
 		if ! echo "$str" | grep "/"; then
 			str=$(find "/usr/share/zoneinfo" -iname "*$str*" | grep -v "posix" | grep -v "right" | sed 's/\/usr\/share\/zoneinfo\///g')
 		fi
 	fi
 
-	TZ="$str" date "+%Y-%m-%d %H:%M" -d "$localtime $localtz " | tr -d '\n'
-   	echo -e "$TZ $str"
+	if [ -f "/usr/share/zoneinfo/$str" ]; then
+		TZ="$str" date "+%Y-%m-%d %H:%M" -d "$localtime $localtz " | tr -d '\n'
+   		echo -e "$TZ $str"
+	else
+		echo "$tmp is a invalid TZ"
+	fi
 done
 echo " "
 echo " "
