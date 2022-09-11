@@ -20,7 +20,7 @@ tzcalc --local "[timezone],[date] [time]" --query "[timezone_1],[timezone_2]"
 ```
 Example:
 ```bash
-tzcalc -l "America/Montevideo,2022-09-10 15:00" -q "America/New_York.Europe/London,Europe/Rome"
+tzcalc -l "America/Montevideo,2022-09-10 15:00" -q "America/New_York,Europe/London,Europe/Rome"
 ```
 Output
 ```ini
