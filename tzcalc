@@ -1,0 +1,62 @@
+#!/bin/bash
+
+localdate="";
+querytime="";
+
+while [[ $# -gt 0 ]]
+do
+	key="$1"
+
+	case $key in
+		-l|--local)
+			localdate="$2"
+			shift
+			shift
+			;;
+		-q|--query)
+			querytime="$2"
+			shift
+			shift
+			;;
+		*)  
+			POSITIONAL+=("$1")
+			shift
+			;;
+	esac
+done
+
+localcity=$(echo $localdate | cut -d "," -f 1)
+
+#Check if localcity is valid TZ or shuld find one valid
+if [ ! -f "/usr/share/zoneinfo/$localcity" ]; then
+		localcity=$(find "/usr/share/zoneinfo" -iname "*$localcity*" | grep -v "posix" | grep -v "right" | sed 's/\/usr\/share\/zoneinfo\///g')
+fi
+
+localtime=$(echo $localdate | cut -d "," -f 2)
+localtz=$(TZ="$localcity" date "+%z")
+querytime=${querytime//,/$'\n'} 
+
+if [ ! -f "/usr/share/zoneinfo/$localcity" ]; then
+	echo "$localcity is a invalid TZ"
+	exit;
+fi
+
+tmp=$(date --date "$localtime" +%s)
+localtime=$(date --date "@$tmp" "+%Y-%m-%d %H:%M")
+
+echo " "
+echo " "
+for str in $querytime 
+do
+
+	if [ ! -f "/usr/share/zoneinfo/$str" ]; then
+		if ! echo "$str" | grep "/"; then
+			str=$(find "/usr/share/zoneinfo" -iname "*$str*" | grep -v "posix" | grep -v "right" | sed 's/\/usr\/share\/zoneinfo\///g')
+		fi
+	fi
+
+	TZ="$str" date "+%Y-%m-%d %H:%M" -d "$localtime $localtz " | tr -d '\n'
+   	echo -e "$TZ $str"
+done
+echo " "
+echo " "
