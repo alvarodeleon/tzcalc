@@ -1,7 +1,7 @@
 # tzcalc
 
 
-## Instalation
+## Installation
 
 ```
 cd /tmp
