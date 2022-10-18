@@ -30,10 +30,10 @@ if [ -z "$localdate" ]; then
 	localtz=$(date "+%z")
 	localcity=$(cat /etc/timezone)
 else
-	echo ">1"
+
 	#if [ ! -z $(echo "$localdate" | grep ",") ] ; then
 	if [ $(echo "$localdate" | awk '{if ($localdate ~ /,/) {print "1";next} {print "0"}}') == 1 ]; then
-		echo ">2"
+
 		localtime=$(echo $localdate | cut -d "," -f 2)
 		localcity=$(echo $localdate | cut -d "," -f 1)
 	else
